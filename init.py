@@ -1,11 +1,21 @@
 from utilisateurs.utilisateur_dao import UtilisateurDao
 from paies.paie_dao import PaieDao
 from evenements.evenement_dao import EvenementDAO 
+from reservations.reservation_dao import reservationDao
 
 
-utilisateur_dao = UtilisateurDao
+#utilisateur_dao = UtilisateurDao
 #utilisateur1 = utilisateur_dao.add_utilisateur('Math', 'tresor', '35', 'ef@test.com', '12345', 'Admin')
 #print(utilisateur1)
+reserv = reservationDao
+nom = reserv.recupere_Nom_utilisateur()
+print(nom)
+place = "45"
+add = reservationDao()  # Assurez-vous que ReservationDao est le nom de votre classe
+nom_event = add.recupere_Nom_event()
+nom_utilisateur = add.recupere_Nom_utilisateur()
+resultat = add.reservation_place(nom_event, nom_utilisateur, place)
+print(resultat)
 
 #paie_Dao = PaieDao
 #paie = PaieDao.payer_evenement('Bijoubitak', 123457825874, '2026-04-03', 564)
@@ -21,14 +31,14 @@ utilisateur_dao = UtilisateurDao
 #print(Utilisateur4)
 
 
-Evenement = EvenementDAO
+#Evenement = EvenementDAO
 #evenement = Evenement.ajouter_evenement("Diner", "2024-05-12", "13:00", "80", "120", "Saveurs du 237_227")
 
 # Affichage des événements
-print("Liste des événements après ajout :")
-evenements = Evenement.afficher_evenements()
+#print("Liste des événements après ajout :")
+#evenements = Evenement.afficher_evenements()
 #for event in evenements:
-print(evenements)
+#print(evenement)
 
 
 #evenement.nom_event("Updated Event")
