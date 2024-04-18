@@ -1,43 +1,44 @@
 import database
-class reservationDao:
+class ReservationDao:
     connexion = database.connexion()
     cursor = connexion.cursor()
 
     @classmethod
-    def recupere_Nom_event(cls):
+    def recupere_Nom_event(cls, nom):
         sql = """
                 SELECT evenement.Nom_event,  reservation.Nom_Event 
                 FROM evenement 
                 INNER JOIN reservation 
-                ON evenement.Nom_event = reservation.Nom_Event
+                ON evenement.Nom_event = reservation.Nom_Event where reservation.Nom_Event = %s
               """
-        cls.cursor.execute(sql)
+        cls.cursor.execute(sql, (nom,))
         nom_event = cls.cursor.fetchone()
         if nom_event:
-            return nom_event[0]
+            message = nom_event[0]
         else:
-            return "le Nom n'existe pas "
+            message = "le Nom n'existe pas "
+        return message
         
     @classmethod
-    def recupere_Nom_utilisateur(cls):
+    def recupere_Nom_utilisateur(cls , nom):
         sql = """
                 SELECT utilisateur.Nom_util, reservation.Nom_util 
                 FROM utilisateur 
                 INNER JOIN reservation 
-                ON utilisateur.Nom_util = reservation.Nom_util
+                ON utilisateur.Nom_util = reservation.Nom_util where reservation.Nom_util = %s
             """
-        cls.cursor.execute(sql)
+        cls.cursor.execute(sql , (nom,))
         nom_util = cls.cursor.fetchone()
         if nom_util:
             return nom_util[0]
         else:
             return "Le nom n'existe pas."
 
-        
+    @classmethod    
     def reservation_place(cls,nom_event, nom_util, place):
         try:
-            #nom_event = cls.recupere_Nom_event()
-            #nom_util = cls.recupere_Nom_utilisateur()
+            nom_event = cls.recupere_Nom_event()
+            nom_util = cls.recupere_Nom_utilisateur()
             sql = "INSERT INTO reservation (Nom_Event, Nom_util, Nombreplaces_event) VALUES (%s, %s, %s)"
             valeurs = (nom_event, nom_util, place)
             cls.cursor.execute(sql, valeurs)
