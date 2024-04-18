@@ -47,3 +47,15 @@ class reservationDao:
             sms = f"Une erreur s'est produite lors de votre réservation : {e}"
         print(sms)
 
+    @classmethod
+    def annuler_reservation_par_nom(cls, nom_utilisateur):
+        try:
+             # Si une réservation a été trouvée, annuler la réservation correspondante
+            sql_delete = "DELETE FROM reservation WHERE Nom_util = %s"
+            cls.cursor.execute(sql_delete, (nom_utilisateur,))
+            cls.connexion.commit()
+            return "La réservation a été annulée avec succès !"
+        except Exception as e:
+            return f"Une erreur s'est produite lors de l'annulation de la réservation : {e}"
+
+

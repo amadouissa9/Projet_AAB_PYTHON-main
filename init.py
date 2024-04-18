@@ -8,7 +8,7 @@ from reservations.reservation_dao import reservationDao
 #utilisateur1 = utilisateur_dao.add_utilisateur('Math', 'tresor', '35', 'ef@test.com', '12345', 'Admin')
 #print(utilisateur1)
 reserv = reservationDao
-nom = reserv.recupere_Nom_utilisateur()
+"""nom = reserv.recupere_Nom_utilisateur()
 print(nom)
 place = "45"
 add = reservationDao()  # Assurez-vous que ReservationDao est le nom de votre classe
@@ -16,7 +16,9 @@ nom_event = add.recupere_Nom_event()
 nom_utilisateur = add.recupere_Nom_utilisateur()
 resultat = add.reservation_place(nom_event, nom_utilisateur, place)
 print(resultat)
-
+"""
+annuler = reserv.annuler_reservation_par_nom('armel')
+print(annuler)
 #paie_Dao = PaieDao
 #paie = PaieDao.payer_evenement('Bijoubitak', 123457825874, '2026-04-03', 564)
 #print(paie)
