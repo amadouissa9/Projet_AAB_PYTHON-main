@@ -1,40 +1,79 @@
-import database  
+import database 
 class UtilisateurDao:
-    connecte= database.connexion()
-    cursor= connecte.cursor()
+    connect= database.connexion()
+    cursor= connect.cursor()
 
     @classmethod 
-    def add_utilisateur(cls,nom, prenom, age, email,password, role ):
+    def add_utilisateur(cls, nom, prenom, age, email, password, role ):
         try:
-            sql = "INSERT INTO utilisateur(Nom_util, Prenom_util, Age_util, Email_util, Password_util, 	Role) VALUES(%s, %s, %s, %s, %s, %s)"
+            sql = "INSERT INTO utilisateur(Nom_util, Prenom_util, Age_util, Email_util, Password_util, Role) VALUES(%s, %s, %s, %s, %s, %s)"
             params =(nom, prenom, age, email,password, role)
             cls.cursor.execute(sql, params)
-            cls.connecte.commit()
+            cls.connect.commit()
             print(f'Mr/Mme {nom} {prenom} a été(e) ajouté(e) avec succès!')
         except Exception as e:
-            print("Erreur d'insertion !",e)
+            if " Duplicate entry" in str(e):
+                print(f" Cet {email}: existe deja pour un autre utilsateur , veillez utiliser un autre email")
+            else:
+                print("Erreur d'insertion !", e)
     
-    def client_existe(self, email):
-        # Vérifie si un utilisateur avec l'email donné existe dans la base de données
-        sql = "SELECT COUNT(*) FROM utilisateur WHERE Email_util = %s"
-        self.cursor.execute(sql, (email,))
-        count = self.cursor.fetchone()[0]
-        return count > 0
-    
-    @classmethod
-    def modifier_utilisateur(self, email, id_utilisateur, nouveau_nom, nouveau_prenom, nouveau_sexe):
-        try:
-            # Vérification de l'existence de l'utilisateur
-            utilisateur_existe = self.client_existe(email)
-            if not utilisateur_existe:
-                print("L'utilisateur avec cet email n'existe pas.")
-                return
 
-            # L'utilisateur existe, procéder à la modification
-            sql = "UPDATE utilisateur SET ID_utilisateur = %s, Nom_util = %s, Prenom_util = %s, Sexe_util = %s WHERE Email_util = %s"
-            values = (id_utilisateur, nouveau_nom, nouveau_prenom, nouveau_sexe, email)
-            self.cursor.execute(sql, values)
-            self.connection.commit()
-            print("Utilisateur modifié avec succès !")
-        except Exception as err:
-            print(f"Erreur lors de la modification de l'utilisateur : {err}")
+    @classmethod
+    def rechercher_utilisateur(cls, nom):
+        try:
+            sql = "SELECT * FROM utilisateur WHERE Nom_util = %s"
+            cls.cursor.execute(sql, (nom,))
+            utilisateur = cls.cursor.fetchone()
+            if utilisateur:
+                print(utilisateur)  
+            else:
+                print(f"Aucun utilisateur avec le nom {nom} trouvé.")
+        except Exception as e:
+            print("Erreur lors de l'affichage de l'utilisateur !", e)
+
+    @classmethod
+    def modifier_utilisateur(cls, id, nom, prenom, age, email, password, role):
+        try:
+            sql = f"UPDATE utilisateur SET Nom_util=%s, Prenom_util=%s, Age_util=%s, Email_util=%s, Password_util=%s, Role=%s WHERE Id_util={id}"
+            params = (nom, prenom, age, email, password, role)
+            cls.cursor.execute(sql, params)
+            cls.connect.commit()
+            print(f"Utilisateur avec l'Identifiant {id} a été modifié avec succès!")
+            return True
+        except Exception as e:
+            print("Erreur de modification !", e)
+            return False
+        
+        
+    @classmethod
+    def afficher_utilisateur(cls):
+        try:
+            sql = "SELECT * FROM utilisateur"
+            cls.cursor.execute(sql)
+            utilisateur = cls.cursor.fetchall()
+            if not utilisateur:
+                sms = "Aucune personne à afficher dans votre liste."
+            else:
+                sms = "Liste des personnes :"
+                for row in utilisateur:
+                    id, nom, prenom, age, email, password, role = row
+                    sms += f"\n Id:{id} Nom: {nom}, Prenom: {prenom}, Age: {age}, Email:{email}, Password{password}, Role{role}"
+        except Exception as e:
+            sms = f"Une erreur s'est produite lors de l'affichage des informations de la personne : {e}"
+        return sms
+        """
+            if utilisateur:
+                print(utilisateur)  
+            else:
+                print(f"Aucun utilisateur avec le nom {nom} trouvé.")
+            """
+            #except Exception as e:
+            #print("Erreur lors de l'affichage de l'utilisateur !", e)
+
+
+    
+
+
+
+
+      
